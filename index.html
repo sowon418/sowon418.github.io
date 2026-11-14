@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>이소원 — Portfolio</title>
+<meta name="description" content="이소원 · 컴퓨터비전 기반 주행 환경 인식과 문서 AI 연구·개발 포트폴리오">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --bg:#f7f7f5; --surface:#ffffff; --line:#e4e4df; --text:#18181b; --muted:#6b6b72;
+  --accent:#0f9d76; --accent-soft:#0f9d7614; --grid:#00000010;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c0d0f; --surface:#141518; --line:#24262b; --text:#ececee; --muted:#8b8d95;
+    --accent:#3ddc97; --accent-soft:#3ddc971a; --grid:#ffffff0d;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c0d0f; --surface:#141518; --line:#24262b; --text:#ececee; --muted:#8b8d95;
+  --accent:#3ddc97; --accent-soft:#3ddc971a; --grid:#ffffff0d;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:Pretendard,system-ui,sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+::selection{background:color-mix(in srgb,var(--accent) 30%,transparent);color:var(--text)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent}
+.num,.when,.metric{font-variant-numeric:tabular-nums}
+.ico{width:14px;height:14px;flex:none;vertical-align:-2px}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.skip{position:absolute;left:-999px}.skip:focus{left:12px;top:12px;background:var(--accent);color:#000;padding:6px 10px;z-index:99}
+
+/* nav */
+header{position:fixed;inset:0 0 auto;z-index:20;border-bottom:1px solid transparent;transition:background .3s,border-color .3s}
+header.solid{backdrop-filter:blur(10px);background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom-color:var(--line)}
+nav{display:flex;align-items:center;gap:20px;height:56px}
+nav .logo{margin-right:auto;font-family:Archivo,sans-serif;font-stretch:125%;font-weight:750;font-size:17px;letter-spacing:-.01em}
+nav a.link{font-size:14px;color:var(--muted)} nav a.link:hover{color:var(--text)}
+#theme{display:grid;place-items:center;background:none;border:1px solid var(--line);color:var(--text);border-radius:8px;width:34px;height:34px;cursor:pointer}
+#theme svg{width:16px;height:16px}
+@media(max-width:640px){nav a.link{display:none}}
+
+/* hero */
+.hero{padding:0;border:0;position:relative;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden;isolation:isolate}
+#sim{position:absolute;inset:0;width:100%;height:100%;z-index:-2;cursor:pointer;display:block}
+.hero-fade{position:absolute;inset:0;z-index:-1;pointer-events:none;background:
+  linear-gradient(180deg,color-mix(in srgb,var(--bg) 70%,transparent) 0,transparent 140px),
+  linear-gradient(0deg,var(--bg) 0,transparent 26%),
+  linear-gradient(90deg,var(--bg) 0,color-mix(in srgb,var(--bg) 88%,transparent) 28%,color-mix(in srgb,var(--bg) 35%,transparent) 50%,transparent 68%)}
+.hero-inner{width:100%;padding-top:120px;padding-bottom:72px;pointer-events:none}
+.hero-copy{max-width:640px}
+.hero-copy .socials,.hud{pointer-events:auto}
+.hero-name{font-family:Archivo,sans-serif;font-stretch:125%;font-weight:800;font-size:clamp(68px,11.5vw,176px);line-height:.88;letter-spacing:-.035em;margin:0 0 28px}
+.hero-line{font-size:clamp(20px,2.1vw,26px);font-weight:600;letter-spacing:-.015em;margin-bottom:12px}
+.hero p.bio{color:var(--muted);font-size:16px;max-width:54ch}
+.socials{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+.socials a{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:999px;font-size:14px;transition:.2s}
+.socials a:hover{border-color:var(--accent);color:var(--accent)}
+.socials svg{width:16px;height:16px}
+
+/* floating HUD */
+.hud{position:absolute;top:84px;right:max(20px,calc((100vw - 1040px)/2 + 20px));width:290px;font-size:12px;
+  background:color-mix(in srgb,var(--surface) 72%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid color-mix(in srgb,var(--line) 80%,transparent);border-radius:10px;padding:12px 14px}
+.stages{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:10px}
+.stages button{font:inherit;font-size:12px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:none;border:1px solid transparent;color:var(--muted);padding:4px 7px;border-radius:6px;cursor:pointer;transition:color .2s,background .2s}
+.stages button:hover{color:var(--text)}
+.stages button.on{color:var(--accent);background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
+.hud dl{display:grid;grid-template-columns:72px 1fr;row-gap:3px;margin:0}
+.hud dt{color:var(--muted)} .hud dd{margin:0;color:var(--text)} .hud dd#s-stage{color:var(--accent)}
+@media(max-width:860px){
+  .hero-fade{background:linear-gradient(180deg,color-mix(in srgb,var(--bg) 70%,transparent) 0,transparent 120px),
+    linear-gradient(0deg,var(--bg) 0,color-mix(in srgb,var(--bg) 88%,transparent) 48%,transparent 78%)}
+  .hud{top:68px;left:20px;right:20px;width:auto;padding:8px}
+  .stages{grid-template-columns:repeat(4,1fr);margin:0}
+  .stages button{text-align:center;padding:4px 2px;font-size:12px}
+  .hud dl{display:none}
+}
+
+/* sections */
+section{border-top:1px solid var(--line)}
+section{padding:88px 0}
+.sec-head{margin-bottom:32px}
+.sec-head h2,.contact h2{font-family:Archivo,Pretendard,sans-serif;font-stretch:125%;font-weight:750;font-size:clamp(28px,3.4vw,40px);line-height:1.05;letter-spacing:-.03em}
+
+.tags{margin-top:14px;font-size:13px;line-height:1.6;color:var(--muted)}
+.tags span+span::before{content:"·";margin:0 .45em;opacity:.6}
+
+/* timeline */
+.tl{display:grid;gap:14px}
+.tl-item{display:grid;grid-template-columns:170px 1fr;gap:24px;padding:22px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+@media(max-width:640px){.tl-item{grid-template-columns:1fr;gap:6px}}
+.tl-item .when{font-size:13px;color:var(--muted)}
+.tl-item h3{font-size:18px}.tl-item h3 small{font-weight:400;color:var(--muted);font-size:14px;margin-left:6px}
+.tl-item ul{margin:10px 0 0 18px;color:var(--muted);font-size:15px}
+.metric{margin-top:12px;font-size:14px;color:var(--muted)}
+.metric .from{text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--muted) 60%,transparent)}
+.metric b{color:var(--text);font-weight:700;margin-left:.2em}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;transition:border-color .2s}
+.card:hover{border-color:color-mix(in srgb,var(--text) 28%,var(--line))}
+.card h3{font-size:17px;line-height:1.4;margin:2px 0 6px;text-wrap:balance}
+.card p{font-size:14px;color:var(--muted);flex:1}
+.links{display:flex;gap:16px;margin-top:14px;font-size:14px;font-weight:500}
+.links:empty{display:none}
+.links a{display:inline-flex;align-items:center;gap:4px;color:var(--text);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px;transition:text-decoration-color .2s}
+.links a:hover{text-decoration-color:var(--accent)}
+.thumb{aspect-ratio:16/9;border-radius:8px;object-fit:cover;background:var(--line)}
+
+.badge{font-size:13px;font-weight:500;color:var(--text);margin:0 0 8px;opacity:.85}
+.card .metric{align-self:flex-start}
+
+/* activities gallery */
+.act{display:block;cursor:default}
+.act.has-img:hover h3,.act.has-img:focus-within h3,.act.open h3{color:var(--accent)}
+.act-main{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.gallery{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.2,.7,.2,1)}
+.act:hover .gallery,.act:focus-within .gallery,.act.open .gallery{grid-template-rows:1fr}
+.gallery-inner{overflow:hidden;min-height:0}
+.strip{display:flex;gap:10px;padding-top:14px;overflow-x:auto;scroll-snap-type:x mandatory}
+.strip img{flex:none;height:200px;width:auto;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:zoom-in;scroll-snap-align:start;
+  opacity:0;transform:translateX(-16px);transition:opacity .35s,transform .35s;transition-delay:calc(var(--i) * 70ms)}
+.act:hover .strip>*,.act:focus-within .strip>*,.act.open .strip>*{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.gallery,.strip>*{transition:none}}
+
+.cam{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:400;color:var(--muted);margin-left:8px;vertical-align:2px;white-space:nowrap}
+.lightbox{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.82);display:grid;place-items:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .25s;cursor:zoom-out}
+.lightbox.on{opacity:1;pointer-events:auto}
+.lightbox figure{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:min(1100px,100%);max-height:100%}
+.lightbox img{max-width:100%;max-height:calc(100svh - 110px);object-fit:contain;border-radius:6px;background:#fff;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.lightbox figcaption{color:#e8e8ea;font-size:13px;text-align:center}
+.lightbox .nav{display:none;place-items:center;position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;cursor:pointer}
+.lightbox .nav svg{width:20px;height:20px;pointer-events:none}
+.lightbox .nav:hover{background:rgba(255,255,255,.26)}
+.lightbox.multi .nav{display:grid}
+.lightbox .prev{left:16px}.lightbox .next{right:16px}
+.thumb-btn{position:relative;display:block;border:0;padding:0;background:none;cursor:zoom-in;margin:-6px -6px 14px;width:calc(100% + 12px)}
+.thumb-btn .thumb{margin:0;width:100%;display:block}
+.thumb-btn .count{position:absolute;right:8px;bottom:8px;display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#fff;background:rgba(10,12,14,.72);padding:3px 9px;border-radius:999px}
+
+.proj-preview{position:fixed;z-index:30;margin:0;pointer-events:none;opacity:0;transform:translateY(6px) scale(.97);transform-origin:center;
+  transition:opacity .2s ease,transform .25s cubic-bezier(.2,.7,.2,1);background:var(--surface);border-radius:12px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.24)}
+.proj-preview.on{opacity:1;transform:none}
+.proj-preview img{display:block;width:100%;height:auto;max-height:68vh;object-fit:contain;background:#fff}
+.proj-preview figcaption{font-size:12px;color:var(--muted);padding:8px 12px;border-top:1px solid var(--line)}
+@media (prefers-reduced-motion:reduce){.proj-preview{transition:none}}
+
+/* list */
+.list{display:grid;gap:10px}
+.list{gap:0;border-top:1px solid var(--line)}
+.row{display:flex;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.row h3{font-size:16px;line-height:1.45;transition:color .2s}.row p{font-size:14px;color:var(--muted);margin-top:2px}
+.row .when{font-size:13px;color:var(--muted);white-space:nowrap}
+
+/* contact */
+.contact{text-align:center;padding:80px 0}
+.contact h2{font-size:clamp(28px,4vw,40px);letter-spacing:-.02em;margin-bottom:26px}
+.contact p{color:var(--muted);margin:10px 0 26px}
+.btn{display:inline-block;background:var(--accent);color:#06140e;font-weight:600;padding:12px 22px;border-radius:10px}
+footer{border-top:1px solid var(--line);padding:24px 0;font-size:13px;color:var(--muted)}
+
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+
+<header><div class="wrap"><nav>
+  <a href="#" class="logo" id="logo"></a>
+  <a class="link" href="#experience">Experience</a>
+  <a class="link" href="#projects">Projects</a>
+  <a class="link" href="#activities">Awards</a>
+  <a class="link" href="#contact">Contact</a>
+  <button id="theme" aria-label="라이트/다크 테마 전환"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg></button>
+</nav></div></header>
+
+<main id="main">
+  <section class="hero" aria-label="소개">
+    <canvas id="sim" aria-label="제로샷 주행 가능 영역 탐지 시뮬레이션"></canvas>
+    <div class="hero-fade"></div>
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <h1 class="hero-name" id="name-en"></h1>
+        <p class="hero-line" id="headline"></p>
+        <p class="bio" id="bio"></p>
+        <div class="socials" id="socials"></div>
+      </div>
+    </div>
+    <div class="hud mono" aria-label="시뮬레이션 상태">
+      <div class="stages" id="stages" role="tablist"></div>
+      <dl>
+        <dt>stage</dt><dd id="s-stage">—</dd>
+        <dt>speed</dt><dd id="s-speed">0 km/h</dd>
+        <dt>drivable</dt><dd id="s-drv">0%</dd>
+        <dt>obstacle</dt><dd id="s-near">—</dd>
+      </dl>
+    </div>
+  </section>
+
+<div class="wrap">
+  <section id="experience">
+    <div class="sec-head"><h2>Experience</h2></div>
+    <div class="tl" id="exp"></div>
+  </section>
+
+  <section id="projects">
+    <div class="sec-head"><h2>Projects</h2></div>
+    <div class="grid" id="proj"></div>
+  </section>
+
+  <section id="activities">
+    <div class="sec-head"><h2>Awards &amp; IP</h2></div>
+    <div class="list" id="acts"></div>
+  </section>
+
+  <section id="education">
+    <div class="sec-head"><h2>Education · Training</h2></div>
+    <div class="list" id="edu"></div>
+  </section>
+
+  <section id="contact" class="contact">
+    <h2>Contact</h2>
+    <a class="btn" id="mail"></a>
+    <div class="socials" id="contact-links" style="justify-content:center"></div>
+  </section>
+</div>
+</main>
+
+<footer><div class="wrap" id="foot"></div></footer>
+
+<script>
+/* ============================================================
+   ✏️  여기만 수정하면 됩니다 — 아래 DATA 객체에 본인 정보를 넣으세요
+   ============================================================ */
+const DATA = {
+  name: "이소원",
+  nameEn: "Sowon Lee",
+  handle: "sowon",
+  role: "Computer Vision · Autonomous Driving · LLM",
+  headline: "주행 환경 인식과 문서 AI를 연구·개발합니다",
+  bio: "경기대학교 AI Vision Lab 학부연구생(2025.12–2026.08). SAM 2, Depth Anything V2, DINOv3를 결합한 제로샷 주행 가능 영역 탐지 연구로 KCI 제1저자 논문을 게재했습니다. 캡스톤 프로젝트 Carbix에서는 Qwen3-VL-4B를 LoRA 파인튜닝해 직접 서빙하고, 문서 필드 추출 정확도를 56.4%에서 99.4%로 높였습니다.",
+  email: "sowon0418@kyonggi.ac.kr",
+  socials: [
+    { label: "GitHub",   url: "https://github.com/sowon418" },
+    { label: "LinkedIn", url: "https://www.linkedin.com/in/%EC%86%8C%EC%9B%90-%EC%9D%B4-72b9593a6" },
+  ],
+  experience: [
+    { when: "2025.12 — 2026.08", org: "경기대학교 AI Vision Lab", title: "학부연구생 · Computer Vision",
+      points: [
+        "제로샷 주행 가능 영역 탐지 연구 — SAM 2, Depth Anything V2, DINOv3를 결합한 알고리즘을 설계·평가하고 KCI 제1저자 논문으로 게재 (사물인터넷융복합논문지, 2026.08)",
+        "BEV 변환 기반 객체 궤적 추정 — 탑다운 고정 카메라 영상에서 YOLOv8 검출과 ByteTrack ID 추적 후 핀홀 역투영으로 지면 좌표(m)를 산출하고, 직접 촬영한 영상으로 궤적을 검증",
+        "군-학 연계 sLLM 개발 — 자연어 → Splunk SPL 변환 모델의 데이터셋 설계, LoRA 파인튜닝, 실행 기반 평가",
+      ],
+      links: { "KCI 논문": "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003375032", "object_tracker": "https://github.com/sowon418/object_tracker" },
+      tags: ["SAM 2", "Depth Anything V2", "DINOv3", "YOLOv8", "ByteTrack", "LoRA", "PyTorch"] },
+    { when: "2026.04", org: "(주)건현알앤디", title: "일경험 인턴",
+      points: ["객체 인식 기반 로봇팔 자동 분류 및 정리 시스템 개발 — 컴퓨터 비전 기반 객체 인식·분류 결과를 로봇팔 제어와 연동해, 물체를 자동으로 인식하고 지정된 위치로 이동·정리"],
+      tags: ["Object Detection", "Robot Arm"] },
+  ],
+  projects: [
+    { cat: "AI · LLM", title: "Carbix — 탄소배출 증빙 문서 AI 추출 플랫폼",
+      desc: "에너지 고지서·운송 서류 이미지에서 값을 읽어 Scope 1·2·3 탄소배출량 산정까지 연결하는 플랫폼. 마스킹과 랜덤 필드 기반 슈도 데이터로 학습셋을 구축하고, YOLOE로 문서 전처리를 적용했습니다. Gemini API 의존 구조를 LoRA 파인튜닝한 Qwen3-VL-4B 자체 서빙(vLLM → llama.cpp GGUF)으로 교체해 문서당 처리 시간을 10.0초에서 5.02초로 줄였습니다.",
+      metric: { label: "필드 정확도", before: "56.4%", after: "99.4%" },
+      tags: ["Qwen3-VL", "LoRA", "vLLM", "llama.cpp", "YOLOE"],
+      links: { Website: "https://carbix.cloud/" }, img: "assets/img/carbix-web.jpg",
+      images: ["assets/img/carbix-web.jpg", "assets/img/carbix-dashboard.jpg", "assets/img/carbix-review.jpg", "assets/img/carbix-simulator.jpg"],
+      captions: ["서비스 첫 화면 (carbix.cloud)", "Scope 1·2·3 배출량 대시보드", "원본 문서와 AI 추출값 대조 검수", "감축 시뮬레이터"],
+      badge: "KIIT 우수논문상 금상 · SW상상기업 최우수상 · 특허 출원" },
+    { cat: "Research", title: "제로샷 주행 가능 영역 탐지 (KCI 제1저자)",
+      desc: "단안 RGB 이미지만으로 비정형 실외 환경의 주행 가능 영역과 장애물을 추가 학습 없이 탐지하는 알고리즘. 파라미터를 조정한 SAM 2로 고밀도 마스크를 만들고, DINOv3 특징으로 마스크를 분류한 뒤 계층적 군집화로 유사 마스크를 병합합니다. Depth Anything V2 깊이 지도를 마스크별 평균 깊이로 결합해 공간 정보를 부여합니다. ORFD 벤치마크에서 RGB만으로 F1 0.918, IoU 0.874를 기록해 RGB+LiDAR 기반 OFF-Net(F1 0.903)보다 높았습니다.",
+      metric: { label: "F1 (자체 데이터셋, SAM 2 단독 대비)", before: "0.733", after: "0.875" },
+      tags: ["SAM 2", "Depth Anything V2", "DINOv3", "Zero-shot", "PyTorch"], links: { "KCI 논문": "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003375032" },
+      img: "assets/img/paper-fig5-orfd.jpg",
+      images: ["assets/img/paper-fig5-orfd.jpg", "assets/img/paper-fig1-pipeline.jpg", "assets/img/paper-fig2-sam2.jpg", "assets/img/paper-fig4-merge.jpg"],
+      captions: ["ORFD 정성 결과 (GT · 예측 · 오버레이)", "알고리즘 구성도", "파라미터 조정 SAM 2 분할 결과", "계층적 군집화 전후 마스크 병합"],
+      badge: "사물인터넷융복합논문지 (한국사물인터넷학회) · 2026.08" },
+    { cat: "Autonomous Driving", title: "F1TENTH 실차 자율주행 — KGU Autonomous Vehicle",
+      desc: "F1TENTH 기반 실차(CILAB X3)의 모터와 2D 라이다를 ROS 2로 구동. 15Hz 라이다 스캔 기반 Follow The Gap 게인 튜닝, 0.25m AEB와 비상정지, twist_mux 제어 우선순위(AEB > 키보드 > 자율주행)를 구성하고 Cartographer SLAM으로 지도를 생성했습니다.",
+      tags: ["ROS 2", "LiDAR", "Cartographer SLAM", "AEB"], links: {}, img: "assets/img/f1tenth.webp",
+      badge: "2026.11 교내 그랑프리" },
+    { cat: "AI · LLM", title: "sLLM 기반 SPL 쿼리 추천 시스템 (군-학 연구)",
+      desc: "망분리 환경의 보안관제 업무를 위한 자연어 → Splunk SPL 변환 시스템. Suricata·Zeek·Splunk 로그를 정규화해 자연어–SPL 쌍 데이터셋을 설계하고 GPT-4로 질의 수천 건을 합성했습니다. 6개 모델 LoRA 파인튜닝, 638건 실행 검증과 2,500개 변형 질의 평가를 거쳐 EXAONE 4 기반 모델(정확도 86.2%)을 선정했습니다.",
+      tags: ["sLLM", "LoRA", "EXAONE", "Splunk SPL", "Gradio"], links: {}, img: "assets/img/sllm.png",
+      badge: "경기대 산학협력단 · 2026.04–07" },
+    { cat: "AI · Data", title: "딱!터 — 서울 상권 데이터 기반 창업 입지 · 업종 추천 (KSEB_Proj)",
+      desc: "KSEB 4기 5인 팀 프로젝트, AI·데이터 담당. 서울시 열린데이터광장 상권·매출·유동인구 데이터(2022–2024)를 MySQL로 정규화하고, MinMaxScaler 정규화와 지표별 가중치로 행정동·업종 상위 5곳을 추천합니다. 추천 사유는 Gemini 1.5 Flash, 상권 리포트는 GPT-4o 2단계 프롬프팅으로 생성하고, FAISS 기반 RAG와 질의 유형 라우팅을 결합한 하이브리드 챗봇을 구성했습니다. Feather 캐싱으로 추천 처리 시간을 평균 150초 이상에서 20초 이내로 줄였습니다.",
+      metric: { label: "추천 처리 시간", before: "150s+", after: "<20s" },
+      tags: ["pandas", "scikit-learn", "LangChain", "FAISS", "GPT-4o", "MySQL"],
+      links: { GitHub: "https://github.com/alberione1110/KSEB_Proj" }, img: "assets/img/kseb-recommend.jpg",
+      images: ["assets/img/kseb-recommend.jpg", "assets/img/kseb-report.jpg", "assets/img/kseb-chatbot.jpg", "assets/img/kseb-architecture.jpg"],
+      captions: ["지역·업종 추천 결과와 LLM 추천 사유", "상권 분석 리포트 (GPT-4o)", "RAG 기반 상담 챗봇", "시스템 아키텍처"],
+      badge: "K-Software Empowerment Bootcamp · 2025.06–08" },
+    { cat: "AI · App", title: "PicFit — 헬스 초보자용 AI 운동 루틴 · 기구 안내 앱",
+      desc: "카메라로 운동 기구를 비추면 YOLOv5가 기구를 인식해 기구명, 설명, 기본 동작 애니메이션을 안내합니다. 사전 질문(운동 경험, 목표 등)으로 사용자 수준을 파악하고, 규칙 기반 시스템으로 맞춤 루틴과 난이도, 소요 시간을 추천합니다. 백엔드와 AI 모델 개발을 담당했습니다.",
+      tags: ["YOLOv5", "TensorFlow · Keras", "OpenCV", "MongoDB", "Kotlin"], links: {},
+      img: "assets/img/picfit-recognition.jpg",
+      images: ["assets/img/picfit-recognition.jpg", "assets/img/picfit-routine.jpg", "assets/img/picfit-system.jpg", "assets/img/picfit-poster.jpg"],
+      captions: ["YOLOv5 기반 운동 기구 인식과 사용법 안내", "사전 질문 기반 루틴 추천", "시스템 구성도", "캡스톤디자인 포스터 전체"],
+      badge: "KIIT 우수논문상 금상 · 캡스톤디자인 동상" },
+  ],
+  // images: 항목에 마우스를 올리면 아래로 펼쳐지는 사진 (없으면 펼침 없음)
+  activities: [
+    { title: "특허 출원 — 비정형 에너지 고지서 및 운송 서류 이미지 기반 탄소 배출량 자동 산정 시스템",
+      desc: "출원번호 10-2026-0202274 · 공동 발명 · Carbix", when: "2026.10",
+      images: ["assets/img/patent-notice.png"] },
+    { title: "2026 AI-Powered SW상상기업 경진대회 최우수상",
+      desc: "경기대학교 소프트웨어중심대학사업단 · 팀 INSIGHT LAB (Carbix)", when: "2026.10",
+      images: ["assets/img/award-sangsang2026.jpg"] },
+    { title: "컴퓨터프로그램저작물 등록 — Carbix(카빅스)",
+      desc: "제 C-2026-037429 호 · 한국저작권위원회 · 공동저작자", when: "2026.07",
+      images: ["assets/img/copyright.png"] },
+    { title: "한국정보기술학회 하계종합학술대회 우수논문상 금상",
+      desc: "대학생 논문경진대회 · 「멀티모달 VLM 기반 공급망 Scope 1·2·3 탄소 배출량 자동 산출 플랫폼」", when: "2026.06",
+      images: ["assets/img/award-kiit2026-gold.jpg"] },
+    { title: "2025 산학협력 캡스톤디자인 경진대회 동상",
+      desc: "경기대학교 소프트웨어중심대학사업단 · 기초캡스톤디자인 · 팀 CodeFlex (PicFit)", when: "2025.07",
+      images: ["assets/img/award-capstone2025.jpg", "assets/img/picfit-poster.jpg"] },
+    { title: "한국정보기술학회 하계종합학술대회 우수논문상 금상",
+      desc: "대학생 논문경진대회 · 「헬스 초보자를 위한 AI 기반 맞춤형 운동 루틴 및 기구 사용 안내 앱 개발」", when: "2025.06",
+      images: ["assets/img/award-kiit2025-gold.jpg"] },
+    { title: "한국인공지능융합기술학회 춘계학술대회 우수 발표 논문상",
+      desc: "「야구 입문 정보 제공 웹페이지」 · 공동 발표", when: "2024.05",
+      images: ["assets/img/award-kaicts2024.jpg"] },
+  ],
+  education: [
+    { title: "경기대학교 AI컴퓨터공학부 인공지능전공", desc: "학사 · GPA 3.83 / 4.5", when: "2023.03 — 2027.02 (졸업 예정)" },
+    { title: "시큐어코딩 해외연수 (싱가포르)",
+      desc: "Expanding Horizon Programme 수료 (Shannon Pte. Ltd.) · HMGICS, KINOBI AI, PayPal, Zenika, monday.com 현지 기업 탐방 및 질의응답", when: "2026.08",
+      images: ["assets/img/singapore-certificate.jpg"] },
+    { title: "H-모빌리티 클래스(현대) — 자율주행(인지), 카인사이드아웃 기초과정 수료",
+      desc: "현대엔지비 · [KDC] 자율주행-인지 Track, [KDC] 카인사이드아웃 · 2026.04.20–06.26", when: "2026.06",
+      images: ["assets/img/hmobility-perception.jpg", "assets/img/hmobility-carinsideout.jpg"] },
+    { title: "K-Software Empowerment Bootcamp (KSEB) 4기 수료",
+      desc: "경기대학교 · 인공지능 5팀 딱!터 · AI·데이터 담당", when: "2025.08",
+      images: ["assets/img/kseb-ddakter.jpg"] },
+  ],
+};
+/* ============================================================ */
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ICONS = {
+  GitHub:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg>',
+  LinkedIn:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.5c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21H9z"/></svg>',
+  Blog:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',
+  Email:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+};
+const I = {
+  out:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>',
+  img:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-9 9"/></svg>',
+  prev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>',
+  next:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>',
+};
+const tagList = ts => ts && ts.length ? `<div class="tags">${ts.map(t=>`<span>${esc(t)}</span>`).join("")}</div>` : "";
+const metricLine = m => m ? `<p class="metric">${esc(m.label)} <span class="from">${esc(m.before)}</span> → <b>${esc(m.after)}</b></p>` : "";
+
+/* render */
+document.title = `${DATA.name} — Portfolio`;
+$("#logo").textContent = DATA.nameEn;
+$("#name-en").innerHTML = DATA.nameEn.split(" ").map(esc).join("<br>");
+$("#headline").textContent = DATA.headline;
+addEventListener("scroll", () => document.querySelector("header").classList.toggle("solid", scrollY > 40), { passive: true });
+$("#bio").textContent = DATA.bio;
+$("#socials").innerHTML = [...DATA.socials, {label:"Email", url: DATA.email ? `mailto:${DATA.email}` : ""}]
+  .filter(s => s.url).map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${ICONS[s.label]||""}${esc(s.label)}</a>`).join("");
+
+$("#exp").innerHTML = DATA.experience.map(e => `
+  <div class="tl-item">
+    <div class="when">${esc(e.when)}</div>
+    <div>
+      <h3>${esc(e.org)}<small>${esc(e.title)}</small></h3>
+      <ul>${e.points.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>
+      ${metricLine(e.metric)}
+      ${tagList(e.tags)}
+      ${e.links?`<div class="links">${Object.entries(e.links).map(([k,v])=>`<a href="${esc(v)}" target="_blank" rel="noopener">${esc(k)}${I.out}</a>`).join("")}</div>`:""}
+    </div>
+  </div>`).join("");
+
+function renderProjects(){
+  $("#proj").innerHTML = DATA.projects.map((p, i)=>`
+    <article class="card">
+      ${p.img?`<button class="thumb-btn" data-p="${i}" aria-label="${esc(p.title)} 이미지 크게 보기"><img class="thumb" src="${esc(p.img)}" alt="${esc(p.title)}" loading="lazy" style="object-position:${p.imgPos||"center"}">${p.images&&p.images.length>1?`<span class="count">${I.img}${p.images.length}</span>`:""}</button>`:""}
+      <h3>${esc(p.title)}</h3>
+      ${p.badge?`<p class="badge">${esc(p.badge)}</p>`:""}
+      <p>${esc(p.desc)}</p>
+      ${metricLine(p.metric)}
+      ${tagList(p.tags)}
+      <div class="links">${Object.entries(p.links).map(([k,v])=>`<a href="${esc(v)}" target="_blank" rel="noopener">${esc(k)}${I.out}</a>`).join("")}</div>
+    </article>`).join("");
+}
+$("#proj").addEventListener("click", e => {
+  const b = e.target.closest(".thumb-btn"); if (!b) return;
+  const p = DATA.projects[+b.dataset.p];
+  openLightbox(p.images || [p.img], 0, p.title, p.captions);
+});
+
+/* hover preview: enlarged image beside the card, only where it won't cover the card */
+const pv = document.createElement("figure"); pv.className = "proj-preview";
+pv.innerHTML = '<img alt=""><figcaption></figcaption>'; document.body.append(pv);
+let pvCard = null;
+function placePreview(card){
+  const r = card.getBoundingClientRect(), gap = 16, vw = innerWidth, vh = innerHeight;
+  const right = vw - r.right - gap * 2, left = r.left - gap * 2;
+  const room = Math.max(right, left), w = Math.min(560, room);
+  if (w < 260) { pv.classList.remove("on"); return false; }
+  pv.style.width = w + "px";
+  pv.style.left = (right >= left ? r.right + gap : r.left - gap - w) + "px";
+  const h = pv.offsetHeight || w * .6;
+  pv.style.top = Math.max(72, Math.min(r.top, vh - h - 16)) + "px";
+  return true;
+}
+$("#proj").addEventListener("mouseover", e => {
+  if (!matchMedia("(hover: hover)").matches) return;
+  const card = e.target.closest(".card"); if (!card || card === pvCard) return;
+  const btn = card.querySelector(".thumb-btn"); if (!btn) { pv.classList.remove("on"); pvCard = null; return; }
+  const p = DATA.projects[+btn.dataset.p]; pvCard = card;
+  const img = pv.querySelector("img"); img.src = p.img; img.alt = p.title;
+  const n = (p.images || [p.img]).length;
+  pv.querySelector("figcaption").textContent = (p.captions && p.captions[0] ? p.captions[0] + " · " : "") + (n > 1 ? `이미지 ${n}장 · 클릭해서 전체 보기` : "클릭해서 크게 보기");
+  if (placePreview(card)) { img.onload = () => pvCard === card && placePreview(card); pv.classList.add("on"); }
+});
+$("#proj").addEventListener("mouseleave", () => { pv.classList.remove("on"); pvCard = null; });
+$("#proj").addEventListener("mouseout", e => { if (pvCard && !pvCard.contains(e.relatedTarget)) { pv.classList.remove("on"); pvCard = null; } });
+addEventListener("scroll", () => { if (pvCard) placePreview(pvCard); }, { passive: true });
+renderProjects();
+
+const renderList = arr => arr.map(a=>{
+  const has = a.images && a.images.length;
+  const imgs = has ? a.images.map((src,i)=>`<img src="${esc(src)}" alt="${esc(a.title)} 사진 ${i+1}" loading="lazy" style="--i:${i}">`).join("") : "";
+  return `<div class="row act${has?" has-img":""}"${has?' tabindex="0"':""}>
+    <div class="act-main"><div><h3>${esc(a.title)}${has?`<span class="cam">${I.img}${a.images.length}<span class="skip">장의 사진</span></span>`:""}</h3><p>${esc(a.desc)}</p></div><div class="when">${esc(a.when)}</div></div>
+    ${has?`<div class="gallery"><div class="gallery-inner"><div class="strip">${imgs}</div></div></div>`:""}
+  </div>`;}).join("");
+const lb = document.createElement("div"); lb.className = "lightbox";
+lb.innerHTML = `<figure><img alt=""><figcaption></figcaption></figure><button class="nav prev" aria-label="이전 이미지">${I.prev}</button><button class="nav next" aria-label="다음 이미지">${I.next}</button>`;
+document.body.append(lb);
+let lbList = [], lbIdx = 0, lbTitle = "", lbCaps = null;
+function showLb(){
+  const img = lb.querySelector("img"); img.src = lbList[lbIdx]; img.alt = `${lbTitle} ${lbIdx+1}`;
+  const cap = (lbCaps && lbCaps[lbIdx]) || "";
+  lb.querySelector("figcaption").textContent = lbList.length > 1 ? `${lbIdx+1} / ${lbList.length}${cap ? " · " + cap : ""}` : cap;
+  lb.classList.toggle("multi", lbList.length > 1);
+}
+function openLightbox(list, idx, title, caps){ lbList = list; lbIdx = idx; lbTitle = title; lbCaps = caps || null; showLb(); lb.classList.add("on"); }
+const stepLb = d => { lbIdx = (lbIdx + d + lbList.length) % lbList.length; showLb(); };
+lb.addEventListener("click", e => {
+  if (e.target.classList.contains("prev")) return stepLb(-1);
+  if (e.target.classList.contains("next")) return stepLb(1);
+  lb.classList.remove("on");
+});
+addEventListener("keydown", e => {
+  if (!lb.classList.contains("on")) return;
+  if (e.key === "Escape") lb.classList.remove("on");
+  if (e.key === "ArrowLeft") stepLb(-1);
+  if (e.key === "ArrowRight") stepLb(1);
+});
+for (const [sel, arr] of [["#acts", DATA.activities], ["#edu", DATA.education]]) {
+  $(sel).innerHTML = renderList(arr);
+  $(sel).addEventListener("click", e => {
+    if (e.target.tagName === "IMG") {
+      const imgs = [...e.target.parentNode.querySelectorAll("img")];
+      openLightbox(imgs.map(i => i.getAttribute("src")), imgs.indexOf(e.target), e.target.alt.replace(/ 사진 \d+$/, ""));
+      return;
+    }
+    const r = e.target.closest(".act.has-img"); if (r && matchMedia("(hover: none)").matches) r.classList.toggle("open");
+  });
+}
+if (DATA.email) { $("#mail").href = `mailto:${DATA.email}`; $("#mail").textContent = DATA.email; } else $("#mail").remove();
+$("#contact-links").innerHTML = DATA.socials.filter(s=>s.url).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener">${ICONS[s.label]||""}${esc(s.label)}</a>`).join("");
+$("#foot").textContent = `© ${new Date().getFullYear()} ${DATA.name}`;
+
+/* theme */
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if(t) root.dataset.theme = t; } catch(e){}
+$("#theme").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch(e){}
+};
+
+
+/* ===== zero-shot drivable-area detection · driver's view ===== */
+(() => {
+  const cv = $("#sim"), ctx = cv.getContext("2d");
+  let W = 640, H = 480, HZ = 200, K = 350, X0 = 320, dpr = 1;
+  function resize() {
+    const r = cv.getBoundingClientRect(); dpr = Math.min(devicePixelRatio || 1, 1.5);
+    W = Math.max(320, r.width); H = Math.max(320, r.height);
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    HZ = Math.round(H * .42); K = .55 * Math.min(W, H * 1.333); X0 = W > 860 ? W * .66 : W * .5;
+  }
+  resize(); addEventListener("resize", resize);
+  let onScreen = true; new IntersectionObserver(([e]) => onScreen = e.isIntersecting).observe(cv);
+  const css = v => getComputedStyle(root).getPropertyValue(v).trim();
+  const STAGES = [
+    { k: "RGB",      n: "01 RGB",      t: 2600 },
+    { k: "DEPTH",    n: "02 Depth",    t: 3200 },
+    { k: "SEGMENT",  n: "03 SAM 2",    t: 2600 },
+    { k: "DRIVABLE", n: "04 Drivable", t: 6000 },
+  ];
+  let stage = 0, lastPick = -1e9, stageAt = 0;
+  const chips = $("#stages");
+  chips.innerHTML = STAGES.map((s, i) => `<button role="tab" data-i="${i}">${s.n}</button>`).join("");
+  const setStage = (i, user) => {
+    stage = i; stageAt = performance.now(); if (user) lastPick = stageAt;
+    chips.querySelectorAll("button").forEach((b, j) => { b.classList.toggle("on", j === i); b.setAttribute("aria-selected", j === i); });
+  };
+  chips.addEventListener("click", e => { const i = e.target.dataset?.i; if (i !== undefined) setStage(+i, true); });
+  cv.addEventListener("click", () => setStage((stage + 1) % STAGES.length, true));
+  setStage(3);
+
+  let probe = null;
+  cv.addEventListener("pointermove", e => {
+    const b = cv.getBoundingClientRect();
+    probe = { x: e.clientX - b.left, y: e.clientY - b.top };
+  });
+  cv.addEventListener("pointerleave", () => probe = null);
+
+  /* ---------- world ---------- */
+  const c  = s => 2.4 * Math.sin(s * .019) + 1.3 * Math.sin(s * .047 + 1);   // path centre (m)
+  const w  = s => 1.8 + .5 * Math.sin(s * .033 + 2);                           // half width (m)
+  const nL = s => .22 * Math.sin(s * .9) + .14 * Math.sin(s * 2.7 + 1);
+  const nR = s => .22 * Math.sin(s * .8 + 3) + .14 * Math.sin(s * 2.3);
+  const R = (a, b) => a + Math.random() * (b - a);
+  const hash = n => { n = Math.sin(n * 127.1) * 43758.5453; return n - Math.floor(n); };
+  const segCol = (id, l = 56) => `hsl(${Math.floor(hash(id) * 360)},42%,${l}%)`;
+  const ramp = v => {
+    v = Math.max(0, Math.min(1, v));
+    const st = [[13, 2, 33], [184, 61, 74], [246, 213, 92]], t = v * 2, i = Math.min(1, Math.floor(t)), f = t - i, a = st[i], b = st[i + 1];
+    return `rgb(${a.map((x, j) => Math.round(x + (b[j] - x) * f)).join(",")})`;
+  };
+  const depthCol = dz => ramp(1 - dz / 55);
+  const FOG = [230, 236, 230];
+  const fogT = dz => Math.min(.78, dz / 65);
+  const tint = (col, dz, k = 1) => `rgb(${col.map((v, i) => Math.round(Math.min(255, v * k) + (FOG[i] - Math.min(255, v * k)) * fogT(dz))).join(",")})`;
+
+  let pos = 0, camX = c(6), speed = 8;
+  const px = (X, dz) => X0 + (X - camX) / dz * K;
+  const rowY = dz => HZ + 3 / dz * (H - HZ);
+  const dzAt = y => 3 / ((y - HZ) / (H - HZ));
+
+  const rocks = [], trees = [], pebbles = [];
+  let nR_ = 10, nT = 2, nP = 2;
+  function spawn() {
+    const far = pos + 85;
+    while (nR_ < far) {                                // rocks: dense, mostly small, some large
+      const s = nR_, on = Math.random() < .68, r = on ? .14 + Math.random() ** 2 * .6 : R(.2, .9);
+      const X = on ? c(s) + R(-.85, .85) * w(s) : c(s) + (Math.random() < .5 ? -1 : 1) * (w(s) + R(.3, 3.5));
+      const g = R(100, 140);
+      rocks.push({ s, X, r, on: on && r > .22, id: Math.random() * 1e3, col: [g, g - R(4, 12), g - R(10, 22)],
+                   v: Array.from({ length: 9 }, () => R(.78, 1.08)) });
+      nR_ += R(3.5, 9);
+    }
+    while (nT < far) {                                 // trees on both verges
+      const s = nT, side = Math.random() < .5 ? -1 : 1;
+      trees.push({ s, X: c(s) + side * (w(s) + R(2, 8)), h: R(3.5, 7.5), conifer: Math.random() < .6, id: Math.random() * 1e3,
+                   leaf: [R(40, 62), R(72, 96), R(40, 54)] });
+      nT += R(1.6, 4.5);
+    }
+    while (nP < far) {                                 // gravel
+      const s = nP, g = R(95, 175);
+      pebbles.push({ s, X: c(s) + R(-1.05, 1.05) * w(s), r: R(.025, .09), col: [g, g - 8, g - 18] });
+      nP += .07;
+    }
+  }
+  const cull = arr => { while (arr.length && arr[0].s < pos + 2) arr.shift(); };
+
+  // lateral plan: move toward the wider gap around each blocking rock
+  const plan = s => {
+    let num = 0, den = 0;
+    for (const b of rocks) {
+      if (!b.on) continue;
+      const wt = Math.exp(-(((s - b.s) / 4.5) ** 2)); if (wt < .01) continue;
+      const lo = c(b.s) - w(b.s), hi = c(b.s) + w(b.s);
+      const target = (b.X - b.r - lo) > (hi - b.X - b.r) ? (lo + b.X - b.r) / 2 : (b.X + b.r + hi) / 2;
+      num += wt * (target - c(s)); den += wt;
+    }
+    return num / Math.max(1, den);
+  };
+
+  /* ---------- drawing helpers ---------- */
+  function drawRock(b, mode) {
+    const dz = b.s - pos, x = px(b.X, dz), y = rowY(dz), r = b.r / dz * K;
+    if (r < .6) return;
+    const shape = (pad = 0) => {
+      ctx.beginPath();
+      b.v.forEach((k, i) => {
+        const a = Math.PI + i / (b.v.length - 1) * Math.PI;          // upper half, flat base
+        const xx = x + Math.cos(a) * (r * k + pad), yy = y + Math.sin(a) * (r * .85 * k + pad);
+        i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy);
+      });
+      ctx.closePath();
+    };
+    if (mode === "RGB" || mode === "DRIVABLE") {
+      ctx.fillStyle = `rgba(30,24,18,${.28 * (1 - fogT(dz))})`;
+      ctx.beginPath(); ctx.ellipse(x + r * .15, y, r * 1.1, r * .22, 0, 0, 7); ctx.fill();
+      ctx.fillStyle = tint(b.col, dz); shape(); ctx.fill();
+      ctx.fillStyle = tint(b.col, dz, 1.28); ctx.beginPath(); ctx.ellipse(x - r * .25, y - r * .55, r * .45, r * .25, -.3, 0, 7); ctx.fill();
+    } else if (mode === "DEPTH") { ctx.fillStyle = depthCol(dz - .3); shape(); ctx.fill(); }
+    else { ctx.fillStyle = segCol(b.id, 50); shape(); ctx.fill(); ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.2; ctx.stroke(); }
+    if (mode === "DRIVABLE" && b.on) {
+      shape(4); ctx.fillStyle = "rgba(255,80,80,.25)"; ctx.fill(); ctx.strokeStyle = "#ff5d5d"; ctx.lineWidth = 2; ctx.stroke();
+    }
+  }
+  function drawTree(t, mode) {
+    const dz = t.s - pos, x = px(t.X, dz), y = rowY(dz), u = K / dz, h = t.h * u;
+    if (u * .2 < .5) return;
+    const trunkC = mode === "DEPTH" ? depthCol(dz) : mode === "SEGMENT" ? segCol(t.id + .3, 40) : tint([88, 66, 48], dz);
+    const leafC  = mode === "DEPTH" ? depthCol(dz - .5) : mode === "SEGMENT" ? segCol(t.id, 52) : tint(t.leaf, dz);
+    const leafHi = mode === "RGB" || mode === "DRIVABLE" ? tint(t.leaf, dz, 1.22) : leafC;
+    ctx.fillStyle = trunkC; ctx.fillRect(x - .12 * u, y - h * .45, .24 * u, h * .45);
+    ctx.fillStyle = leafC;
+    if (t.conifer) {
+      for (let i = 0; i < 3; i++) {
+        const top = y - h * (1 - i * .2), base = y - h * (.28 - i * .02) - i * h * .14, half = (1.3 - i * .3) * u;
+        ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x - half, base); ctx.lineTo(x + half, base); ctx.fill();
+      }
+    } else {
+      [[0, .78, .95], [-.6, .62, .7], [.6, .62, .7], [0, .5, .8]].forEach(([ox, oy, rr]) => {
+        ctx.beginPath(); ctx.arc(x + ox * u, y - h * oy, rr * u * 1.1, 0, 7); ctx.fill();
+      });
+      ctx.fillStyle = leafHi; ctx.beginPath(); ctx.arc(x - .35 * u, y - h * .85, .45 * u, 0, 7); ctx.fill();
+    }
+  }
+  function tag(text, x, y, bg = "rgba(10,12,14,.72)", fg = "#fff") {
+    ctx.font = "600 11px 'JetBrains Mono', monospace";
+    const tw = ctx.measureText(text).width + 10;
+    x = Math.max(2, Math.min(W - tw - 2, x));
+    ctx.fillStyle = bg; ctx.beginPath(); ctx.roundRect(x, y - 9, tw, 18, 4); ctx.fill();
+    ctx.fillStyle = fg; ctx.textBaseline = "middle"; ctx.fillText(text, x + 5, y);
+  }
+
+  /* ---------- loop ---------- */
+  let prev = performance.now();
+  function frame(now) {
+    const dt = Math.min(.05, (now - prev) / 1000); prev = now;
+    if (!onScreen) { requestAnimationFrame(frame); return; }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (now - lastPick > 9000 && now - stageAt > STAGES[stage].t) setStage((stage + 1) % STAGES.length, false);
+
+    spawn(); cull(rocks); cull(trees); cull(pebbles);
+    const blocking = rocks.filter(b => b.on && b.s - pos > 2);
+    const near = blocking.length ? blocking[0].s - pos : null;
+    speed += ((near !== null && near < 16 ? 5 : 8.5) - speed) * dt * 1.5;
+    pos += speed * dt;
+    const look = pos + 6;
+    camX += (c(look) + plan(look) - camX) * dt * 2.4;
+
+    const mode = STAGES[stage].k, acc = css("--accent"), photo = mode === "RGB" || mode === "DRIVABLE";
+
+    // sky + far hills
+    if (photo) {
+      const g = ctx.createLinearGradient(0, 0, 0, HZ); g.addColorStop(0, "#a7c6d8"); g.addColorStop(1, "rgb(230,236,230)");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, HZ);
+      ctx.fillStyle = "#9db0a1"; ctx.beginPath(); ctx.moveTo(0, HZ);
+      for (let x = 0; x <= W; x += 12) ctx.lineTo(x, HZ - 22 - 14 * Math.sin(x * .012 - camX * .05) - 8 * Math.sin(x * .031 + 1));
+      ctx.lineTo(W, HZ); ctx.fill();
+    } else { ctx.fillStyle = mode === "DEPTH" ? ramp(0) : "hsl(205,40%,72%)"; ctx.fillRect(0, 0, W, HZ); }
+
+    // ground scanlines
+    let drv = 0, tot = 0, prevK = null;
+    for (let y = HZ; y < H; y += 2) {
+      const dz = dzAt(y + 1), s = pos + dz, cs = c(s), ws = w(s);
+      const xl = px(cs - ws + nL(s), dz), xr = px(cs + ws + nR(s), dz);
+      const band = Math.floor(s / 1.3) % 2, k = Math.floor(s / 14);
+      if (mode === "DEPTH") { ctx.fillStyle = depthCol(dz); ctx.fillRect(0, y, W, 2); }
+      else if (mode === "SEGMENT") {
+        ctx.fillStyle = "hsl(95,38%,52%)";  ctx.fillRect(0, y, xl, 2);        // left terrain mask
+        ctx.fillStyle = "hsl(150,34%,50%)"; ctx.fillRect(xr, y, W - xr, 2);    // right terrain mask
+        ctx.fillStyle = "hsl(32,55%,60%)";  ctx.fillRect(xl, y, xr - xl, 2);   // path mask
+        ctx.fillStyle = "#fff"; ctx.fillRect(xl - 1, y, 2, 2); ctx.fillRect(xr - 1, y, 2, 2);
+      } else {
+        const grass = band ? [84, 104, 58] : [92, 112, 63], dirt = band ? [146, 114, 80] : [154, 121, 86];
+        const verge = [120, 108, 72], rut = [118, 90, 62];
+        ctx.fillStyle = tint(grass, dz); ctx.fillRect(0, y, W, 2);
+        const vw = .35 / dz * K;
+        ctx.fillStyle = tint(verge, dz); ctx.fillRect(xl - vw, y, xr - xl + vw * 2, 2);
+        ctx.fillStyle = tint(dirt, dz); ctx.fillRect(xl, y, xr - xl, 2);
+        ctx.fillStyle = tint(rut, dz);
+        for (const o of [-.75, .75]) { const rx = px(cs + o, dz), rw = .32 / dz * K; ctx.fillRect(rx - rw / 2, y, rw, 2); }
+      }
+      if (mode === "DRIVABLE") {
+        ctx.fillStyle = "rgba(0,0,0,.28)"; ctx.fillRect(0, y, Math.max(0, xl), 2); ctx.fillRect(xr, y, W - xr, 2);
+        ctx.globalAlpha = .36; ctx.fillStyle = acc; ctx.fillRect(xl, y, xr - xl, 2); ctx.globalAlpha = 1;
+        ctx.fillStyle = acc; ctx.fillRect(xl - 1.5, y, 3, 2); ctx.fillRect(xr - 1.5, y, 3, 2);
+      }
+      prevK = k;
+      drv += Math.max(0, Math.min(W, xr) - Math.max(0, xl)); tot += W;
+    }
+
+    // gravel (not segmented by SAM — too small)
+    if (mode !== "SEGMENT") {
+      for (let i = pebbles.length - 1; i >= 0; i--) {
+        const p = pebbles[i], dz = p.s - pos; if (dz < 2.6 || dz > 40) continue;
+        const r = p.r / dz * K; if (r < .5) continue;
+        ctx.fillStyle = mode === "DEPTH" ? depthCol(dz - .1) : tint(p.col, dz);
+        ctx.beginPath(); ctx.ellipse(px(p.X, dz), rowY(dz), r, r * .6, 0, 0, 7); ctx.fill();
+      }
+    }
+
+    // rocks + trees, far to near
+    const objs = [...rocks.map(o => ({ o, t: 0 })), ...trees.map(o => ({ o, t: 1 }))]
+      .filter(e => e.o.s - pos > 2.4 && e.o.s - pos < 80).sort((a, b) => b.o.s - a.o.s);
+    for (const e of objs) e.t ? drawTree(e.o, mode) : drawRock(e.o, mode);
+
+    // depth read-outs
+    if (mode === "DRIVABLE" || mode === "DEPTH") {
+      for (const d of [5, 10, 20, 30]) {
+        const y = rowY(d), s = pos + d, xl = px(c(s) - w(s), d), xr = px(c(s) + w(s), d);
+        ctx.strokeStyle = mode === "DEPTH" ? "rgba(255,255,255,.55)" : acc; ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
+        ctx.beginPath(); ctx.moveTo(xl, y); ctx.lineTo(xr, y); ctx.stroke(); ctx.setLineDash([]);
+        tag(`${d} m`, xr + 6, y, "rgba(10,12,14,.55)");
+      }
+    }
+    if (mode === "DRIVABLE") {
+      ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.setLineDash([10, 8]); ctx.lineDashOffset = -pos * 20; ctx.beginPath();
+      let first = true;
+      for (let dz = 3.2; dz < 45; dz *= 1.07) {
+        const s = pos + dz, x = px(c(s) + plan(s), dz), y = rowY(dz);
+        first ? ctx.moveTo(x, y) : ctx.lineTo(x, y); first = false;
+      }
+      ctx.stroke(); ctx.setLineDash([]);
+      for (const b of blocking) {
+        const dz = b.s - pos; if (dz > 35) break;
+        const r = b.r / dz * K;
+        tag(`${dz.toFixed(1)} m`, px(b.X, dz) - 22, rowY(dz) - r * 1.0 - 14, "rgba(200,40,40,.85)");
+      }
+    }
+
+    // pointer depth probe
+    if (probe && probe.y > HZ + 4) {
+      const dz = dzAt(probe.y);
+      ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(probe.x - 9, probe.y); ctx.lineTo(probe.x + 9, probe.y); ctx.moveTo(probe.x, probe.y - 9); ctx.lineTo(probe.x, probe.y + 9); ctx.stroke();
+      tag(`depth ${dz.toFixed(1)} m`, probe.x + 12, probe.y - 14, acc, "#06140e");
+    }
+
+    // ego hood
+    ctx.fillStyle = "rgba(14,15,17,.94)"; ctx.beginPath();
+    const hw = Math.min(W, H * 1.333) * .4; ctx.moveTo(X0 - hw, H); ctx.quadraticCurveTo(X0, H - 52, X0 + hw, H); ctx.fill();
+
+    $("#s-stage").textContent = mode;
+    $("#s-speed").textContent = `${(speed * 3.6).toFixed(0)} km/h`;
+    $("#s-drv").textContent = `${Math.round(drv / tot * 100)}%`;
+    $("#s-near").textContent = near !== null ? `${near.toFixed(1)} m` : "—";
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
